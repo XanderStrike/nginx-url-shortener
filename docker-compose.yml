@@ -7,6 +7,5 @@ services:
     environment:
       - ID_LENGTH=${ID_LENGTH:-5}
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx/redirects:/etc/nginx/redirects
     restart: unless-stopped
