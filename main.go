@@ -16,7 +16,6 @@ import (
 const (
 	port      = 9090
 	configDir = "/etc/nginx/redirects"
-	baseURL   = "http://localhost:8080"
 )
 
 var idLength = 5
@@ -81,11 +80,15 @@ button { padding: 8px 20px; cursor: pointer; }
 	<input type="text" name="url" placeholder="https://example.com/very/long/url" required>
 	<button type="submit">Shorten</button>
 </form>
-{{- if .ShortURL }}
-<div class="result">
-	<p>Short URL: <a href="{{.ShortURL}}">{{.ShortURL}}</a></p>
+{{- if .ShortID }}
+<div class="result" id="result">
+	<p>Short URL: <a id="shorturl"></a></p>
 	<p>Redirects to: {{.OriginalURL}}</p>
 </div>
+<script>
+document.getElementById('shorturl').href = location.origin + '/{{.ShortID}}';
+document.getElementById('shorturl').textContent = location.origin + '/{{.ShortID}}';
+</script>
 {{- end }}
 {{- if .Error }}
 <div class="result" style="background:#ffe0e0">
@@ -96,7 +99,7 @@ button { padding: 8px 20px; cursor: pointer; }
 </html>`))
 
 type pageData struct {
-	ShortURL    string
+	ShortID     string
 	OriginalURL string
 	Error       string
 }
@@ -115,7 +118,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			} else if err := reloadNginx(); err != nil {
 				data.Error = fmt.Sprintf("Config written but reload failed: %v", err)
 			} else {
-				data.ShortURL = baseURL + "/" + id
+				data.ShortID = id
 				data.OriginalURL = url
 			}
 		}
