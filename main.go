@@ -47,6 +47,7 @@ func sanitizeURL(u string) string {
 }
 
 func writeRedirectConfig(id, url string) error {
+	os.Remove(filepath.Join(configDir, "default.conf"))
 	safe := sanitizeURL(url)
 	content := fmt.Sprintf("location = /%s {\n    return 301 '%s';\n}\n", id, safe)
 	return os.WriteFile(filepath.Join(configDir, id+".conf"), []byte(content), 0644)
