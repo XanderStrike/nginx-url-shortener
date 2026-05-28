@@ -1,6 +1,7 @@
 services:
   nginx:
     build: .
+    # image: xanderstrike/nginx-url-shortener:latest
     ports:
       - "8080:80"
     environment:
